@@ -40,9 +40,9 @@ require("lazy").setup({
  
 	'neovim/nvim-lspconfig', -- Language Server Protocol
 	
-	'hrsh7th/cmp-nvim-lsp' -- Bridges LspConfig and Cmp
+	'hrsh7th/cmp-nvim-lsp', -- Bridges LspConfig and Cmp
 
-	'hrsh7th/nvim-cmp' -- Auto-completion
+	'hrsh7th/nvim-cmp', -- Auto-completion
  
 	{ "catppuccin/nvim", name = "catppuccin" }, -- Neovim Theme
 
@@ -72,7 +72,7 @@ require("lazy").setup({
 
 	'willothy/nvim-cokeline', -- Neovim Tabline
 	
-	'chun-yang/auto-pairs', -- Closes parentheses, quotes, etc.
+	'windwp/nvim-autopairs', -- Closes parentheses, quotes, etc.
 
 	"alvan/vim-closetag", -- Closes XML tags
 
@@ -127,6 +127,14 @@ vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
 -- cokeline (Tabline)
 require('cokeline').setup()
 
+-- auto-pairs (Closes parentheses, quotes, etc.)
+require("nvim-autopairs").setup {}
+local cmp_autopairs = require('nvim-autopairs.completion.cmp')
+cmp.event:on(
+  'confirm_done',
+  cmp_autopairs.on_confirm_done()
+)
+
 -- Set Colorscheme --
 vim.cmd.colorscheme "catppuccin"
 vim.cmd([[ set number ]]) -- Numbered Lines
@@ -135,4 +143,5 @@ vim.cmd([[ set number ]]) -- Numbered Lines
 --         SETUP LSP SERVERS HERE         --
 --    Include Cmp Capabilities in setup   --
 
+local lsp = require("lspconfig")
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
