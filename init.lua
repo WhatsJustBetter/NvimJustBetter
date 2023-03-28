@@ -38,7 +38,11 @@ require("lazy").setup({
 
 	'williamboman/mason-lspconfig.nvim', -- Bridges Mason and LspConfig
  
-	'neovim/nvim-lspconfig', -- Error checking and completion
+	'neovim/nvim-lspconfig', -- Language Server Protocol
+	
+	'hrsh7th/cmp-nvim-lsp' -- Bridges LspConfig and Cmp
+
+	'hrsh7th/nvim-cmp' -- Auto-completion
  
 	{ "catppuccin/nvim", name = "catppuccin" }, -- Neovim Theme
 
@@ -84,20 +88,37 @@ require("lazy").setup({
 
 -- Setup and Configure Plugins --
 
--- mason.nvim (Error checking and completion)
+-- mason.nvim (LSP Installations)
 require("mason").setup()
 require("mason-lspconfig").setup()
 
+-- nvim-cmp (Autocomplete)
+local cmp = require("cmp")
+cmp.setup({
+	mapping = cmp.mapping.preset.insert({
+		['<C-b>'] = cmp.mapping.scroll_docs(-4),
+		['<C-f>'] = cmp.mapping.scroll_docs(4),
+		['<C-o>'] = cmp.mapping.complete(),
+		['<C-e>'] = cmp.mapping.abort(),
+		['<CR>'] = cmp.mapping.confirm({ select=true }),
+	}),
+	sources = cmp.config.sources({
+		{ name = 'nvim_lsp' },
+	}, {
+		{ name = 'buffer' }
+	}),
+})
+
 -- catppuccin (Theme)
 require("catppuccin").setup({
- flavour = "macchiato",
- transparent_background = true,
- coc_nvim = true,
+	flavour = "macchiato",
+	transparent_background = true,
+	coc_nvim = true,
 })
 
 -- lualine (Statusline)
 require('lualine').setup({
- theme = "catppuccin"
+	theme = "catppuccin"
 })
 
 -- neo-tree (File Explorer)
@@ -112,5 +133,6 @@ vim.cmd([[ set number ]]) -- Numbered Lines
 
 
 --         SETUP LSP SERVERS HERE         --
---        LspConfig Pyright Setup:        --
---  require("lspconfig").pyright.setup{}  --
+--    Include Cmp Capabilities in setup   --
+
+local capabilities = require('cmp_nvim_lsp').default_capabilities()
