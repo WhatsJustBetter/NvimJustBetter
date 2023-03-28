@@ -188,7 +188,7 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities()
 * Emmet-vim (HTML Emmet support)
 
 ## Thanks!
-* [**Lufthansa**](https://about.jaybeegay.repl.co)<br>He's my friend who also codes a little bit, and wanted help setting up a auto-complete plugin on Neovim. There were alot of issues along the way because he was setting it up on a raspberry pi, and couldn't really get it working.<br>So the next day, I decided to make a simple, copy+paste, neovim config to make neovim accesible to everyone who's willing to try it.
+* [**Lufthansa**](https://jaythedev.com)<br>He's my friend who also codes a little bit, and wanted help setting up a auto-complete plugin on Neovim. There were alot of issues along the way because he was setting it up on a raspberry pi, and couldn't really get it working.<br>So the next day, I decided to make a simple, copy+paste, neovim config to make neovim accesible to everyone who's willing to try it.
 * [**Me!**](https://about.hughwillson.repl.co)<br>I made the config, didn't I? I just wanted to switch from NVChad because of its lack of features, so I just decided to make my own for me and Lufthansa to use. Turns out, using lazy.nvim, it makes it so you dont have to download a single thing! Well, except a NERD font for your terminal.
 
 ### Thats about all I have to say about my config. Have a good day!
