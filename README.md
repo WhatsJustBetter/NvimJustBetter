@@ -174,7 +174,7 @@ local capabilities = require('cmp_nvim_lsp').default_capabilities()
 * Neo-tree (Neovim sidebar file explorer)
 * Telescope (Neovim fuzzy finder)
 * Cokeline (Better tabline/bufferline)
-* Auto-pairs (Closes parentheses, quotes, etc.)
+* Neovim Auto-pairs (Closes parentheses, quotes, etc.)
 * Vim-Closetag (Closes XML/HTML tags)
 * Emmet-vim (HTML Emmet support)
 
