@@ -42,34 +42,38 @@ require("lazy").setup({
 	{ "williamboman/mason.nvim", build = ":MasonUpdate" }, -- Language server installation
 
 	'williamboman/mason-lspconfig.nvim', -- Bridges Mason and LspConfig
- 
+
 	'neovim/nvim-lspconfig', -- Language Server Protocol
-	
+
 	'hrsh7th/cmp-nvim-lsp', -- Bridges LspConfig and Cmp
 
 	'hrsh7th/nvim-cmp', -- Auto-completion
-    
+
     'hrsh7th/cmp-vsnip', -- Bridges Vsnip and Cmp
-    
+
     'hrsh7th/vim-vsnip', -- Snippets
 
     'ray-x/lsp_signature.nvim', -- Function Arguments
- 
+
 	'navarasu/onedark.nvim', -- Neovim Theme
 
 	{ 'nvim-treesitter/nvim-treesitter', build = ":TSUpdate"}, -- Better syntax highlighting
- 
+
+    'jose-elias-alvarez/null-ls.nvim', -- Bridges Lsp and Prettier
+
+    'MunifTanjim/prettier.nvim',
+
 	{ "nvim-lualine/lualine.nvim", -- Neovim Statusline
     		dependencies = {
         		"nvim-tree/nvim-web-devicons",
     		},
 	},
- 
+
 	{ "nvim-neo-tree/neo-tree.nvim", -- Neovim sidebar file explorer
 		branch = "v2.x",
-		dependencies = { 
-			"MunifTanjim/nui.nvim", 
-			"nvim-lua/plenary.nvim", 
+		dependencies = {
+			"MunifTanjim/nui.nvim",
+			"nvim-lua/plenary.nvim",
 			"nvim-tree/nvim-web-devicons",
 		},
 	},
@@ -82,7 +86,7 @@ require("lazy").setup({
 		},
 
 	'willothy/nvim-cokeline', -- Neovim Tabline
-	
+
 	'windwp/nvim-autopairs', -- Closes parentheses, quotes, etc.
 
 	"alvan/vim-closetag", -- Closes XML tags
@@ -93,9 +97,9 @@ require("lazy").setup({
 	--             Add your own plugins!              --
 	--   Use provided lazy.nvim install from github   --
 	--  Or just go below and put 'author/repository', --
-    
-    	-- 'manzeloth/live-server',
- 
+
+    'manzeloth/live-server',
+
 })
 
 
@@ -105,10 +109,30 @@ require("lazy").setup({
 require("mason").setup()
 require("mason-lspconfig").setup()
 
+-- LspConfig (Error highlighting)
+vim.diagnostic.config({
+    virtual_text = true,
+    signs = true,
+    underline = true,
+    update_in_insert = true,
+    severity_sort = false,
+})
+local signs = { Error = " ", Warn = " ", Hint = " ", Info = " " }
+for type, icon in pairs(signs) do
+    local hl = "DiagnosticSign" .. type
+    vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+end
+
 -- onedark.nvim (Neovim Theme)
 require('onedark').setup {
     style = 'deep'
 }
+
+-- null-ls
+require("null-ls").setup()
+
+-- prettier (Colorful Syntax Highlighting)
+require("prettier").setup()
 
 -- nvim-cmp (Autocomplete)
 local cmp = require("cmp")
@@ -143,66 +167,71 @@ vim.cmd([[ let g:neo_tree_remove_legacy_commands = 1 ]])
 -- cokeline (Tabline)
 local get_hex = require('cokeline/utils').get_hex
 
-local yellow = vim.g.terminal_color_3
+local space = {text = "    "}
 
 require('cokeline').setup {
-    default_hl = {
-        fg = function(buffer)
-          return
-            buffer.is_focused
-            and get_hex('Normal', 'fg')
-             or get_hex('Comment', 'fg')
-        end,
-        bg = get_hex('ColorColumn', 'bg'),
-      },
-
-      components = {
-        {
-          text = ' ',
-          bg = get_hex('Normal', 'bg'),
-        },
-        {
-          text = '',
-          fg = get_hex('ColorColumn', 'bg'),
-          bg = get_hex('Normal', 'bg'),
-        },
-        {
-          text = function(buffer)
-            return buffer.devicon.icon
-          end,
-          fg = function(buffer)
-            return buffer.devicon.color
-          end,
-        },
-        {
-          text = ' ',
-        },
-        {
-          text = function(buffer) return buffer.filename .. '  ' end,
-          style = function(buffer)
-            return buffer.is_focused and 'bold' or nil
-          end,
-        },
-        {
-          text = '',
-          delete_buffer_on_left_click = true,
-        },
-        {
-          text = '',
-          fg = get_hex('ColorColumn', 'bg'),
-          bg = get_hex('Normal', 'bg'),
-        },
-    },
+            mappings = {
+              cycle_prev_next = true,
+            },
+            default_hl = {
+              fg = function(buffer)
+                return
+                  buffer.is_focused and nil or get_hex("Comment", "fg")
+              end,
+              bg = "none",
+            },
+            components = {
+                space,
+                {
+                    text = function(buffer)
+                        return buffer.devicon.icon
+                    end,
+                    fg = function(buffer)
+                        return buffer.devicon.color
+                    end
+                },
+                {
+                    text = function(buffer)
+                        return buffer.filename
+                    end,
+                    fg = function(buffer)
+                        if buffer.is_focused then
+                            return "#78dce8"
+                        end
+                        if buffer.is_modified then
+                            return "#e5c463"
+                        end
+                        if false then
+                            return "#fc5d7c"
+                        end
+                    end,
+                    style = function(buffer)
+                        if buffer.is_focused then
+                            return "underline"
+                        end
+                        return nil
+                    end
+                },
+                {
+                    text = function(buffer)
+                        if buffer.is_readonly then
+                            return " 🔒"
+                        end
+                        return ""
+                    end
+                },
+                space
+            },
     sidebar = {
         filetype = 'neo-tree',
         components = {
             {
                 text = "    Neo-tree",
                 fg = vim.g.terminal_color_3,
-                bg = get_hex("NeoTreeNormal", 'bg'),
+                bg = get_hex("NeoTreeNormal"),
                 style = 'bold'
             }
-        }   
+        }
     }
 }
 
@@ -219,24 +248,27 @@ require("lsp_signature").setup()
 
 -- Set Colorscheme --
 require('onedark').load()
-vim.cmd([[ set number ]]) -- Numbered Lines
-
+vim.cmd([[
+    set number 
+    set cursorline
+    highlight CursorLine cterm=NONE ctermbg=NONE ctermfg=NONE guibg=NONE guifg=NONE
+]]) -- Numbered Lines
 
 -- LSP Setup Helpers --
 local lsp = require("lspconfig")
 local capabilities = require('cmp_nvim_lsp').default_capabilities()
 local lsp_setup = {
-  on_attach = function(client, bufnr)
-    require("lsp_signature").on_attach({
-      bind = true, -- This is mandatory, otherwise border config won't get registered.
-      handler_opts = {
-        border = "rounded"
-      }
-    }, bufnr)
-  end,
+    on_attach = function(_, bufnr)
+        require("lsp_signature").on_attach({
+            bind = true, -- This is mandatory, otherwise border config won't get registered.
+            handler_opts = {
+                border = "rounded"
+            }
+        }, bufnr)
+    end,
   capabilities=capabilities,
 }
-function add(t1, t2)
+local function add(t1, t2)
     return table.move(t2, 1, #t2, #t1 + 1, t1)
 end
 
