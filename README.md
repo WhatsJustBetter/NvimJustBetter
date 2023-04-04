@@ -11,6 +11,8 @@ Not built-in background. Edit in your terminal settings.
 * We also made the keymaps easier to use. (Ctrl-C = Copy, Ctrl-Y = Paste, Ctrl-Z = Undo, Ctrl-Y = Redo)
 
 ## Installation
+* On debian based systems, run install.sh
+
 * Install a NERD font onto your terminal.<br>If you dont, weird icons like □ or � will show up most of the time.
 <details>
 <summary>Copy and Paste this code into init.lua.</summary>
