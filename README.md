@@ -12,11 +12,10 @@ Not built-in background. Edit in your terminal settings.
 
 ## Installation
 * Install a NERD font onto your terminal.<br>If you dont, weird icons like □ or � will show up most of the time.
-<details>
-
 * On debian based systems (such as ubuntu), run install.sh
 
-<summary>Itherwise, Copy and Paste this code into init.lua.</summary>
+<details>
+<summary>Otherwise, Copy and Paste this code into init.lua.</summary>
 
 ```lua
 ---         NvimJustBetter           ---
