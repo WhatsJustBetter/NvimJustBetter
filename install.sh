@@ -12,6 +12,6 @@ mkdir .config/nvim
 
 cd .config/nvim
 
-sudo wget https://github.com/dashdash-studios/NvimJustBetter/blob/main/init.lua
+sudo wget https://raw.githubusercontent.com/dashdash-studios/NvimJustBetter/main/init.lua
 
 nvim
